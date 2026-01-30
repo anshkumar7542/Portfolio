@@ -35,7 +35,7 @@ const MediaModal = ({ item, onClose }: MediaModalProps) => {
           onClick={onClose}
         >
           <motion.div
-            className="relative w-full max-w-3xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden"
+            className="relative w-full max-w-3xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -59,7 +59,7 @@ const MediaModal = ({ item, onClose }: MediaModalProps) => {
               </div>
             </div>
 
-            <div className="p-6 md:p-8 space-y-6">
+            <div className="p-6 md:p-8 space-y-6 overflow-y-auto">
               <p className="text-muted-foreground">{item.longDescription ?? item.description}</p>
 
               {item.highlights && (

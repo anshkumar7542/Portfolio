@@ -54,7 +54,7 @@ const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
           onClick={onClose}
         >
           <motion.div
-            className="relative w-full max-w-4xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden"
+            className="relative w-full max-w-4xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -80,7 +80,7 @@ const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
               </div>
             </div>
 
-            <div className="p-6 md:p-8 space-y-8">
+            <div className="p-6 md:p-8 space-y-8 overflow-y-auto">
               <div>
                 <p className="uppercase tracking-[0.2em] text-xs text-muted-foreground mb-4">Strengths</p>
                 <div className="space-y-3">
