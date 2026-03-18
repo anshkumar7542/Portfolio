@@ -99,7 +99,7 @@ const HeroSection = () => {
               <img
                 src="/ansh.png"
                 alt="Ansh Kumar"
-                className="w-full h-[420px] sm:h-[480px] lg:h-[520px] object-cover object-top scale-[1.02]"
+                className="w-full h-[400px] sm:h-[460px] lg:h-[500px] object-cover object-[center_18%] scale-[1.08]"
                 loading="lazy"
               />
             </div>
