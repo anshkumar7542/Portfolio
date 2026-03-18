@@ -19,6 +19,7 @@ export interface MediaRowItem {
 }
 
 interface MediaRowProps {
+  id?: string;
   title: string;
   items: MediaRowItem[];
   onItemClick?: (item: MediaRowItem) => void;
@@ -28,6 +29,7 @@ interface MediaRowProps {
 }
 
 const MediaRow = ({
+  id,
   title,
   items,
   onItemClick,
@@ -51,7 +53,7 @@ const MediaRow = ({
   };
 
   return (
-    <section className="py-10 md:py-14">
+    <section id={id} className="py-10 md:py-14">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

@@ -88,6 +88,7 @@ const SkillsSection = () => {
   return (
     <>
       <MediaRow
+        id="skills"
         title="Skills & Strengths"
         items={skills}
         enableWheelScroll

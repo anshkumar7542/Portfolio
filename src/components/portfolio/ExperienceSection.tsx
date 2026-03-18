@@ -73,6 +73,7 @@ const ExperienceSection = () => {
   return (
     <>
       <MediaRow
+        id="experience"
         title="Seasons & Episodes"
         items={experiences}
         onItemClick={(item) => setSelected(item)}

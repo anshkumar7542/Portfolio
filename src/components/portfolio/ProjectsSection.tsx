@@ -71,6 +71,7 @@ const ProjectsSection = () => {
   return (
     <>
       <MediaRow
+        id="projects"
         title="Projects"
         items={projects}
         onItemClick={(item) => setSelected(item)}
