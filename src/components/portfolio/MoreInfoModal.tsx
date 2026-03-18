@@ -21,24 +21,28 @@ const weaknesses = [
 ];
 
 const hobbies = [
-  "Competitive Programming & DSA Practice – Solving algorithmic problems to sharpen logical thinking.",
-  "Building Side Projects – Experimenting with new tech stacks and system designs.",
-  "Tech Reading & System Design Content – Following engineering blogs, architecture case studies, and best practices.",
-  "Fitness & Mindfulness – Maintaining physical and mental discipline to support long-term performance.",
+  "Competitive Programming & DSA Practice - Solving algorithmic problems to sharpen logical thinking.",
+  "Building Side Projects - Experimenting with new tech stacks and system designs.",
+  "Tech Reading & System Design Content - Following engineering blogs, architecture case studies, and best practices.",
+  "Fitness & Mindfulness - Maintaining physical and mental discipline to support long-term performance.",
 ];
 
 const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
       }
     };
+
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKey);
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKey);
     };
   }, [isOpen, onClose]);
@@ -47,21 +51,21 @@ const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-6 py-10"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 px-4 py-6 md:px-6 md:py-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="relative w-full max-w-4xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
+            className="relative my-auto flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="h-52 bg-gradient-to-br from-black via-neutral-900 to-black relative">
+            <div className="relative h-52 bg-gradient-to-br from-black via-neutral-900 to-black">
               <img
                 src="/ansh3.png"
                 alt="Ansh Kumar"
@@ -70,8 +74,8 @@ const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
               <div className="absolute bottom-6 left-6 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-primary/20 text-primary flex items-center justify-center">
-                  <Film className="w-5 h-5" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
+                  <Film className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-white/60">Now Playing</p>
@@ -80,61 +84,63 @@ const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
               </div>
             </div>
 
-            <div className="p-6 md:p-8 space-y-8 overflow-y-auto">
-              <div>
-                <p className="uppercase tracking-[0.2em] text-xs text-muted-foreground mb-4">Strengths</p>
-                <div className="space-y-3">
-                  {strengths.map((item, index) => (
-                    <motion.div
-                      key={item}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex gap-3 items-start"
-                    >
-                      <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-                      <p className="text-sm text-foreground/90">{item}</p>
-                    </motion.div>
-                  ))}
+            <div className="min-h-0 overflow-y-auto overscroll-contain p-6 md:p-8">
+              <div className="space-y-8">
+                <div>
+                  <p className="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Strengths</p>
+                  <div className="space-y-3">
+                    {strengths.map((item, index) => (
+                      <motion.div
+                        key={item}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-start gap-3"
+                      >
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
+                        <p className="text-sm text-foreground/90">{item}</p>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <p className="uppercase tracking-[0.2em] text-xs text-muted-foreground mb-4">Weaknesses</p>
-                <div className="space-y-3">
-                  {weaknesses.map((item, index) => (
-                    <motion.div
-                      key={item}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex gap-3 items-start"
-                    >
-                      <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-                      <p className="text-sm text-foreground/90">{item}</p>
-                    </motion.div>
-                  ))}
+                <div>
+                  <p className="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Weaknesses</p>
+                  <div className="space-y-3">
+                    {weaknesses.map((item, index) => (
+                      <motion.div
+                        key={item}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-start gap-3"
+                      >
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
+                        <p className="text-sm text-foreground/90">{item}</p>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <p className="uppercase tracking-[0.2em] text-xs text-muted-foreground mb-4">Hobbies</p>
-                <div className="space-y-3">
-                  {hobbies.map((item, index) => (
-                    <motion.div
-                      key={item}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex gap-3 items-start"
-                    >
-                      <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
-                      <p className="text-sm text-foreground/90">{item}</p>
-                    </motion.div>
-                  ))}
+                <div>
+                  <p className="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Hobbies</p>
+                  <div className="space-y-3">
+                    {hobbies.map((item, index) => (
+                      <motion.div
+                        key={item}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-start gap-3"
+                      >
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary" />
+                        <p className="text-sm text-foreground/90">{item}</p>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -142,10 +148,10 @@ const MoreInfoModal = ({ isOpen, onClose }: MoreInfoModalProps) => {
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+              className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
               aria-label="Close details"
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </button>
           </motion.div>
         </motion.div>

@@ -28,14 +28,14 @@ const MediaModal = ({ item, onClose }: MediaModalProps) => {
     <AnimatePresence>
       {item && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-6 py-10"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 px-4 py-6 md:px-6 md:py-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="relative w-full max-w-3xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
+            className="relative my-auto w-full max-w-3xl rounded-2xl border border-border bg-background shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -59,7 +59,7 @@ const MediaModal = ({ item, onClose }: MediaModalProps) => {
               </div>
             </div>
 
-            <div className="p-6 md:p-8 space-y-6 overflow-y-auto">
+            <div className="min-h-0 overflow-y-auto overscroll-contain p-6 md:p-8 space-y-6">
               <p className="text-muted-foreground">{item.longDescription ?? item.description}</p>
 
               {item.highlights && (

@@ -23,7 +23,8 @@ const ContactSection = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send message.");
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error ?? "Failed to send message.");
       }
 
       toast({
@@ -32,10 +33,10 @@ const ContactSection = () => {
       });
 
       setFormData({ name: "", email: "", message: "" });
-    } catch {
+    } catch (error) {
       toast({
         title: "Unable to send",
-        description: "Please try again or reach out via email.",
+        description: error instanceof Error ? error.message : "Please try again or reach out via email.",
         variant: "destructive",
       });
     } finally {

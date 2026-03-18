@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import nodemailer from "nodemailer";
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -14,20 +13,33 @@ app.get("/api/health", (_req, res) => {
   res.json({ ok: true, timestamp: new Date().toISOString() });
 });
 
-const smtpHost = process.env.SMTP_HOST;
-const smtpPort = Number(process.env.SMTP_PORT || 587);
-const smtpUser = process.env.SMTP_USER;
-const smtpPass = process.env.SMTP_PASS;
-const mailTo = process.env.MAIL_TO || smtpUser;
+const resendApiKey = process.env.RESEND_API_KEY;
+const mailFrom = process.env.MAIL_FROM;
+const mailTo = process.env.MAIL_TO;
 
-const transporter = smtpHost && smtpUser && smtpPass
-  ? nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpPort === 465,
-      auth: { user: smtpUser, pass: smtpPass },
-    })
-  : null;
+const isValidEmail = (value) => /\S+@\S+\.\S+/.test(value);
+
+const sendViaResend = async ({ name, email, message }) => {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: mailFrom,
+      to: [mailTo],
+      reply_to: email,
+      subject: `New message from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Resend request failed: ${response.status} ${errorBody}`);
+  }
+};
 
 app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body ?? {};
@@ -36,8 +48,15 @@ app.post("/api/contact", async (req, res) => {
     return res.status(400).json({ ok: false, error: "Missing fields." });
   }
 
-  if (!transporter || !mailTo) {
-    return res.status(500).json({ ok: false, error: "Email service not configured." });
+  if (!isValidEmail(String(email))) {
+    return res.status(400).json({ ok: false, error: "Invalid email address." });
+  }
+
+  if (!resendApiKey || !mailFrom || !mailTo) {
+    return res.status(500).json({
+      ok: false,
+      error: "Email service not configured. Set RESEND_API_KEY, MAIL_FROM, and MAIL_TO.",
+    });
   }
 
   const record = {
@@ -49,13 +68,7 @@ app.post("/api/contact", async (req, res) => {
   };
 
   try {
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${smtpUser}>`,
-      to: mailTo,
-      replyTo: record.email,
-      subject: `New message from ${record.name}`,
-      text: `Name: ${record.name}\nEmail: ${record.email}\n\n${record.message}`,
-    });
+    await sendViaResend(record);
 
     messages.push(record);
     console.log("New portfolio message:", record);
