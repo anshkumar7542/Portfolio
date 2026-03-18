@@ -1,6 +1,6 @@
 import Navbar from '@/components/portfolio/Navbar';
 import HeroSection from '@/components/portfolio/Home';
-import ProjectsSection from '@/components/portfolio/Projects';
+import ProjectsSection from '@/components/portfolio/ProjectsSection';
 import SkillsSection from '@/components/portfolio/SkillsSection';
 import ExperienceSection from '@/components/portfolio/ExperienceSection';
 import EducationSection from '@/components/portfolio/EducationSection';
