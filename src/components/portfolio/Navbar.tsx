@@ -16,6 +16,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,15 +37,37 @@ const Navbar = () => {
     return () => window.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!window.location.hash) return;
+
+    const timer = window.setTimeout(() => {
+      const element = document.querySelector(window.location.hash);
+      if (!element) return;
+
+      const navHeight = navRef.current?.offsetHeight ?? 0;
+      const y = element.getBoundingClientRect().top + window.scrollY - navHeight - 12;
+      window.scrollTo({ top: y, behavior: "auto" });
+    }, 100);
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const scrollToSection = (href: string) => {
     setIsMobileMenuOpen(false);
+    setIsProfileOpen(false);
     const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    if (!element) return;
+
+    const navHeight = navRef.current?.offsetHeight ?? 0;
+    const y = element.getBoundingClientRect().top + window.scrollY - navHeight - 12;
+    window.history.replaceState(null, "", href);
+    window.scrollTo({ top: y, behavior: "smooth" });
   };
 
   return (
     <>
       <motion.nav
+        ref={navRef}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -55,8 +78,12 @@ const Navbar = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.a 
-              href="#"
+              href="#top"
               className="font-display text-3xl text-primary tracking-[0.2em]"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection("#top");
+              }}
               whileHover={{ scale: 1.05 }}
             >
               AK
@@ -128,7 +155,10 @@ const Navbar = () => {
             {/* Mobile menu button */}
             <button
               className="md:hidden p-2"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => {
+                setIsProfileOpen(false);
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+              }}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

@@ -19,7 +19,7 @@ const mailTo = process.env.MAIL_TO;
 
 const isValidEmail = (value) => /\S+@\S+\.\S+/.test(value);
 
-const sendViaResend = async ({ name, email, message }) => {
+const sendViaResend = async ({ name, email, subject, message }) => {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -30,8 +30,8 @@ const sendViaResend = async ({ name, email, message }) => {
       from: mailFrom,
       to: [mailTo],
       reply_to: email,
-      subject: `New message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+      subject: subject ? `${subject} - ${name}` : `New message from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject || "General inquiry"}\n\n${message}`,
     }),
   });
 
@@ -42,9 +42,9 @@ const sendViaResend = async ({ name, email, message }) => {
 };
 
 app.post("/api/contact", async (req, res) => {
-  const { name, email, message } = req.body ?? {};
+  const { name, email, subject, message } = req.body ?? {};
 
-  if (!name || !email || !message) {
+  if (!name || !email || !subject || !message) {
     return res.status(400).json({ ok: false, error: "Missing fields." });
   }
 
@@ -63,6 +63,7 @@ app.post("/api/contact", async (req, res) => {
     id: messages.length + 1,
     name: String(name),
     email: String(email),
+    subject: String(subject),
     message: String(message),
     receivedAt: new Date().toISOString(),
   };
@@ -75,7 +76,10 @@ app.post("/api/contact", async (req, res) => {
     return res.status(201).json({ ok: true });
   } catch (error) {
     console.error("Email send failed:", error);
-    return res.status(500).json({ ok: false, error: "Failed to send email." });
+    return res.status(500).json({
+      ok: false,
+      error: error instanceof Error ? error.message : "Failed to send email.",
+    });
   }
 });
 

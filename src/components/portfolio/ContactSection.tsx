@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const ContactSection = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +32,7 @@ const ContactSection = () => {
         description: "Thanks for reaching out. I'll get back to you soon.",
       });
 
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
       toast({
         title: "Unable to send",
@@ -141,6 +141,14 @@ const ContactSection = () => {
                 type="email"
                 placeholder="Your Email"
                 value={formData.email}
+                onChange={handleChange}
+                required
+                className="bg-secondary border-border focus:border-primary h-12"
+              />
+              <Input
+                name="subject"
+                placeholder="Subject"
+                value={formData.subject}
                 onChange={handleChange}
                 required
                 className="bg-secondary border-border focus:border-primary h-12"
